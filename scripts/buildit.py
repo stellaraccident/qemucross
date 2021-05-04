@@ -171,6 +171,9 @@ def build_libcxx_stage1(args):
     #"-DLIBCXX_ENABLE_LOCALIZATION=OFF",
     "-DLIBCXX_HAS_MUSL_LIBC=ON",
     "-DLIBCXX_ENABLE_FILESYSTEM=OFF",
+    "-DLIBCXXABI_USE_LLVM_UNWINDER=ON",
+    "-DLIBCXX_ENABLE_SHARED=OFF",
+    "-DLIBCXX_ENABLE_EXCEPTIONS=OFF",
   ], cwd=c.libcxx_stage1_build_dir, env=c.environ)
   print("--- libcxx make ---")
   subprocess.check_call([
