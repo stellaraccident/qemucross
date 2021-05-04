@@ -12,7 +12,7 @@ def add_action(f):
   return f
 
 
-class Paths:
+class Config:
   def __init__(self, args):
     self.repo_dir = os.path.abspath(os.path.dirname(os.path.dirname(__file__)))
     # Source paths.
@@ -31,28 +31,36 @@ class Paths:
     self.syslib_dir = os.path.join(self.sysroot_dir, "lib")
     os.makedirs(self.syslib_dir, exist_ok=True)
 
+    # Environment.
+    environ = os.environ.copy()
+    if "CC" in environ: del environ["CC"]
+    if "CXX" in environ: del environ["CXX"]
+    if "LD" in environ: del environ["LD"]
+    self.environ = environ
+
 
 @add_action
 def build_musl(args):
-  p = Paths(args)
+  c = Config(args)
   print("--- Configure MUSL ---")
   subprocess.check_call([
-    os.path.join(p.musl_src_dir, "configure"),
-    f"--srcdir={p.musl_src_dir}",
-    f"--prefix={p.sysroot_dir}",
-    f"--syslibdir={p.syslib_dir}",
-    "--disable-static",
-  ], cwd=p.musl_build_dir)
+    os.path.join(c.musl_src_dir, "configure"),
+    f"--srcdir={c.musl_src_dir}",
+    f"--prefix={c.sysroot_dir}",
+    #f"--syslibdir={p.syslib_dir}",
+    #"--disable-static",
+    "--disable-shared",
+  ], cwd=c.musl_build_dir, env=c.environ)
   print("--- MUSL Configure Complete ---")
   print(f"--- Building MUSL (jobs={args.j})---")
   subprocess.check_call([
     "make",
     f"-j{args.j}",
-  ], cwd=p.musl_build_dir)
+  ], cwd=c.musl_build_dir, env=c.environ)
   print(f"--- Installing MUSL ---")
   subprocess.check_call([
     "make", "install",
-  ], cwd=p.musl_build_dir)
+  ], cwd=c.musl_build_dir, env=c.environ)
 
 
 def main(args):

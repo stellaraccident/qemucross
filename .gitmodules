@@ -6,3 +6,6 @@
 	url = https://github.com/llvm/llvm-project.git
 [submodule "external/llvm"]
 	shallow = true
+[submodule "external/libcxxrt"]
+	path = external/libcxxrt
+	url = https://github.com/libcxxrt/libcxxrt.git
