@@ -168,7 +168,8 @@ def build_libcxx_stage1(args):
     "-DLIBCXX_CXX_ABI=libcxxrt",
     f"-DLIBCXX_CXX_ABI_INCLUDE_PATHS={c.libcxxrt_src_dir}/src",
     f"-DCMAKE_INSTALL_PREFIX={c.libcxx_stage1_install_dir}",
-    "-DLIBCXX_ENABLE_LOCALIZATION=OFF",
+    #"-DLIBCXX_ENABLE_LOCALIZATION=OFF",
+    "-DLIBCXX_HAS_MUSL_LIBC=ON",
     "-DLIBCXX_ENABLE_FILESYSTEM=OFF",
   ], cwd=c.libcxx_stage1_build_dir, env=c.environ)
   print("--- libcxx make ---")
